@@ -1,0 +1,497 @@
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--text);
+  padding-bottom: clamp(150px, 24vh, 260px); /* soft fade zone below the buttons */
+  /* Black at the top, blue through the middle, then a long soft blend to the page colour (approved — keep). */
+  background: linear-gradient(
+    180deg,
+    #000207 0%,
+    #01040f 14%,
+    #020818 24%,
+    #04124a 36%,
+    #0a24b0 48%,
+    #1050f0 60%,
+    #2f75ff 71%,
+    #6f9dff 81%,
+    #b5cdff 90%,
+    #e3ecff 96%,
+    var(--paper) 100%
+  );
+}
+
+/* blueprint paper: faint 24px + 120px lines, only over the dark/blue part */
+.hero__grid {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(rgba(190, 212, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(190, 212, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(rgba(190, 212, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(190, 212, 255, 0.04) 1px, transparent 1px);
+  background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  background-position: center top;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 80%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 45%, transparent 80%);
+}
+
+/* thin vertical frame rails */
+.hero__rails {
+  position: absolute;
+  inset: 0 var(--gutter); /* rails sit on the same edge padding as the logo and the Menu button */
+  z-index: -1;
+  pointer-events: none;
+  border-inline: 1px solid rgba(190, 212, 255, 0.14);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 88%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 88%);
+}
+
+/* ---- layout: two separate columns, so the copy and the drawing can never overlap ---- */
+.hero__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: calc(var(--nav-h) + 8px);
+}
+
+.hero__figure {
+  order: 1;
+  min-width: 0;
+  pointer-events: none;
+}
+
+.hero__copy {
+  order: 2;
+  position: relative;
+  z-index: 2;
+  max-width: 560px;
+}
+
+.hero__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 13px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.hero__chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--signal);
+}
+
+/* a heading, not a block of type: smaller, wider lines, normal tracking */
+.hero__title {
+  margin-top: 18px;
+  font-size: clamp(1.8rem, 1rem + 1.7vw, 2.55rem);
+  line-height: 1.15;
+  font-weight: 500;
+  letter-spacing: -0.028em;
+  color: #fff;
+  text-wrap: balance;
+}
+
+.hero__lede {
+  margin-top: 14px;
+  max-width: 56ch;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.86);
+  text-wrap: pretty;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.bp {
+  width: 100%;
+  height: auto;
+  overflow: visible; /* strokes never get clipped at the viewBox edge */
+  font-family: var(--font-mono);
+}
+
+/* one gentle load-in for the copy; nothing follows the cursor */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__copy > * {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: rise 0.8s var(--ease-out) forwards;
+  }
+  .hero__copy > :nth-child(1) {
+    animation-delay: 0.5s;
+  }
+  .hero__copy > :nth-child(2) {
+    animation-delay: 0.58s;
+  }
+  .hero__copy > :nth-child(3) {
+    animation-delay: 0.66s;
+  }
+  .hero__copy > :nth-child(4) {
+    animation-delay: 0.74s;
+  }
+}
+
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, clamp(420px, 34vw, 540px)) minmax(0, 1fr);
+    column-gap: 24px;
+    /* the copy sits at the bottom of this box, well above the bottom of the screen */
+    min-height: calc(100svh - 130px);
+  }
+
+  .hero__copy {
+    grid-column: 1;
+    grid-row: 1;
+    order: 0;
+    align-self: end;
+  }
+
+  /* The drawing sits outside the grid so it can be as large as the screen allows.
+     Its width never exceeds the space to the right of the copy column, so the two cannot touch. */
+  .hero__figure {
+    position: absolute;
+    top: calc(var(--nav-h) + 8px);
+    right: var(--gutter);
+    order: 0;
+    width: min(
+      calc(100% - 2 * var(--gutter) - clamp(420px, 34vw, 540px) - 24px),
+      calc((100svh - var(--nav-h) - 70px) * 1.32)
+    );
+  }
+}
+
+@media (max-width: 1023px) {
+  /* stacked layout: drawing first, copy below — the drawing is capped so the copy stays on screen */
+  .hero__figure {
+    width: min(100%, 560px, max(300px, calc((100svh - var(--nav-h) - 380px) * 1.32)));
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  /* labels would render at ~4px on a phone: drop the text, keep the drawing */
+  .bp .plate text,
+  .bp .annot {
+    display: none;
+  }
+}
+
+/* ---------- Blueprint SVG ---------- */
+.bp {
+  --draw: 1.05s;
+}
+
+.bp .edge {
+  fill: none;
+  stroke: var(--stroke);
+  stroke-width: 1.2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.bp .edge--cube {
+  stroke: #fff;
+  stroke-width: 1.7;
+}
+
+.bp .edge--cube-side {
+  stroke: rgba(255, 255, 255, 0.78);
+  stroke-width: 1.2;
+}
+
+.bp .edge--dim {
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 1;
+}
+
+.bp .edge--plate {
+  stroke: var(--stroke-dim);
+  stroke-width: 1.1;
+}
+
+.bp .edge--route {
+  stroke: var(--signal);
+  stroke-opacity: 0.9;
+  stroke-width: 1.6;
+}
+
+.bp .route-under {
+  fill: none;
+  stroke: var(--signal);
+  stroke-opacity: 0.16;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+/* the line of light: a soft wide trail with a bright core */
+.bp .route-flow {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-dasharray: 0.16 1;
+  stroke-dashoffset: 0.16;
+  opacity: 0;
+}
+
+.bp .route-flow--glow {
+  stroke: #8fd4ff;
+  stroke-width: 10;
+  stroke-opacity: 0.5;
+  stroke-dasharray: 0.34 1;
+  stroke-dashoffset: 0.34;
+}
+
+.bp .shadow {
+  fill: rgba(0, 4, 38, 0.5);
+}
+
+.bp .cube-ping {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+  stroke-linejoin: round;
+  opacity: 0;
+}
+
+.bp .grid-line {
+  fill: none;
+  stroke: rgba(173, 201, 255, 0.2);
+  stroke-width: 0.8;
+}
+
+.bp .tick {
+  fill: none;
+  stroke: var(--stroke-dim);
+  stroke-width: 1;
+}
+
+.bp .glyph {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bp .label {
+  fill: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.bp .label--sub {
+  fill: rgba(255, 255, 255, 0.72);
+  font-size: 9px;
+  font-weight: 400;
+}
+
+.bp .label--note {
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  font-family: var(--font-sans);
+}
+
+.bp .label--note.label--sub {
+  font-size: 12px;
+}
+
+.bp .rule {
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 1;
+}
+
+.bp .callout {
+  fill: none;
+  stroke: var(--stroke-dim);
+  stroke-width: 1;
+}
+
+.bp .titleblock rect {
+  fill: rgba(3, 10, 46, 0.55);
+  stroke: var(--stroke-dim);
+}
+
+.bp .titleblock line {
+  stroke: var(--stroke-dim);
+}
+
+/* status indicator on the cube side: a small pill with three bars (lines, not dots) */
+.bp .pill {
+  fill: rgba(3, 10, 60, 0.35);
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-width: 1;
+}
+
+.bp .bar {
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.bp .bar--on {
+  stroke: #fff;
+}
+
+/* Motion: each piece plays once, or twice at most — then it stops. */
+@media (prefers-reduced-motion: no-preference) {
+  .bp .edge {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: bp-draw var(--draw) cubic-bezier(0.65, 0, 0.35, 1) var(--d, 0s) forwards;
+  }
+
+  .bp .fade-in {
+    opacity: 0;
+    animation: bp-fade 0.7s ease var(--d, 0s) forwards;
+  }
+
+  /* slabs build up from the bottom, cubes then drop in one after another */
+  .bp .rise {
+    animation: bp-rise 0.9s var(--ease-out) var(--d, 0s) both;
+  }
+
+  .bp .module {
+    animation: bp-drop 0.95s cubic-bezier(0.2, 0.9, 0.25, 1.12) var(--d, 0s) both;
+  }
+
+  /* the line of light: out from the supervisor to an agent, rest, repeat — for as long as the page is open */
+  .bp .route-flow {
+    animation: bp-loop 3.6s cubic-bezier(0.45, 0, 0.35, 1) var(--d, 0s) infinite both;
+  }
+
+  .bp .route-flow--glow {
+    animation-name: bp-loop-glow;
+  }
+
+  /* each cube's top edge flashes at the moment the light reaches it */
+  .bp .cube-ping {
+    animation: bp-ping 3.6s ease-out var(--d, 0s) infinite both;
+  }
+
+  /* the supervisor's dashed ring turns twice, then rests */
+  .bp .ring-spin {
+    stroke-dasharray: 5 7;
+    animation: bp-ring 6s linear 2.4s 2 forwards;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bp .ring-spin {
+    stroke-dasharray: 5 7;
+  }
+}
+
+@keyframes bp-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes bp-fade {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bp-rise {
+  from {
+    transform: translateY(26px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes bp-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-34px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bp-loop {
+  0% {
+    stroke-dashoffset: 0.16;
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  52% {
+    stroke-dashoffset: -1;
+    opacity: 1;
+  }
+  58%,
+  100% {
+    stroke-dashoffset: -1;
+    opacity: 0;
+  }
+}
+
+@keyframes bp-loop-glow {
+  0% {
+    stroke-dashoffset: 0.34;
+    opacity: 0;
+  }
+  6% {
+    opacity: 1;
+  }
+  52% {
+    stroke-dashoffset: -1;
+    opacity: 1;
+  }
+  58%,
+  100% {
+    stroke-dashoffset: -1;
+    opacity: 0;
+  }
+}
+
+@keyframes bp-ping {
+  0%,
+  48% {
+    opacity: 0;
+  }
+  54% {
+    opacity: 1;
+  }
+  74%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes bp-ring {
+  to {
+    stroke-dashoffset: -48;
+  }
+}

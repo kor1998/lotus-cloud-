@@ -1,0 +1,96 @@
+/* ---------- Section 2: trusted platforms + numbers (on the page colour) ---------- */
+.trust {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.trust__inner {
+  padding-block: 8px 0;
+}
+
+.trust__row {
+  display: grid;
+  gap: 28px;
+  align-items: center;
+}
+
+.trust__lead {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: rgba(5, 15, 58, 0.6);
+}
+
+.trust__logos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 16px;
+}
+
+.trust__logos li {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: rgba(5, 15, 58, 0.5);
+  white-space: nowrap;
+}
+
+.trust__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 56px;
+  border-top: 1px solid rgba(5, 15, 58, 0.1);
+}
+
+.trust__stat {
+  padding: 22px 0 0;
+}
+
+.trust__stat dt {
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.trust__stat dd {
+  margin: 4px 0 0;
+  font-size: 13.5px;
+  color: rgba(5, 15, 58, 0.6);
+}
+
+@media (min-width: 900px) {
+  .trust__row {
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: 48px;
+  }
+
+  .trust__logos {
+    grid-template-columns: repeat(3, auto);
+    justify-content: space-between;
+  }
+
+  .trust__stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .trust__stat + .trust__stat {
+    padding-left: 28px;
+    border-left: 1px solid rgba(5, 15, 58, 0.1);
+  }
+}
+
+.trust__logos img {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+@media (min-width: 1240px) {
+  .trust__logos {
+    grid-template-columns: repeat(6, auto);
+  }
+}

@@ -1,0 +1,83 @@
+/*
+  Lotus Cloud design tokens
+
+  Colour balance (≈60 / 30 / 10):
+    60%  blueprint blues   — one hue family, deep navy → electric cobalt
+    30%  ice + cream       — linework, text, light surfaces
+    10%  spark (orange)    — the single warm accent: focus rings and one marker per view
+  Cool blue + warm cream text + one orange spark keeps the page from going monotone.
+
+  Type system (measured from the reference sites):
+    display  Geist 400, 56–76px, line-height ~1, tracking −0.045em   (Terms 56/−0.05em, Steel 60/−0.02em, Griffin 72)
+    lede     Geist 400, 18–20px / 1.55                              (Griffin 20/28, Terms 18/27)
+    system   Geist Mono 12–13px, uppercase, +0.06em                  (Steel + Griffin nav / buttons)
+*/
+:root {
+  /* Blueprint blues */
+  --bp-950: #030a2e;
+  --bp-900: #061456;
+  --bp-800: #0a1f94;
+  --bp-700: #0d2fcb;
+  --bp-600: #1646f2;
+  --bp-500: #2f68ff;
+
+  /* Ice + cream */
+  --ice: #dce8ff;
+  --ice-2: #a9c3ff;
+  --cream: #f7f3ec;
+  --paper: #f6f8fc;
+  --ink: #050f3a;
+
+  /* The single warm accent */
+  --spark: #ff7a3d;
+
+  /* Text on dark */
+  --text: var(--cream);
+  --text-2: rgba(247, 243, 236, 0.76);
+  --text-3: rgba(220, 232, 255, 0.64);
+
+  /* Lines */
+  --hairline: rgba(169, 195, 255, 0.18);
+  --hairline-strong: rgba(169, 195, 255, 0.34);
+
+  /* Blueprint diagram surfaces (the isometric PADMA drawing) */
+  --face-top: #1a4fb8;
+  --face-left: #0c2d76;
+  --face-right: #09235e;
+  --stroke: #dbe7ff;
+  --stroke-dim: rgba(189, 212, 255, 0.34);
+  --signal: #6fd8ff; /* live data in the drawing */
+
+  /* Doss-style solid blue cubes on a dark slab */
+  --cube-top: #3a74ff;
+  --cube-left: #1f52f0;
+  --cube-right: #1238b8;
+  --slab-top: #071a78;
+  --slab-left: #05125a;
+  --slab-right: #030c3d;
+  --slab-under: #040f48;
+
+  --accent: #2f68ff; /* buttons on light surfaces */
+
+  /* Type */
+  --font-sans: 'Geist Variable', 'Geist', system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, monospace;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Layout */
+  --radius-s: 10px;
+  --radius-m: 18px;
+  --nav-h: 60px;
+  --wrap: 2000px;
+  --gutter: clamp(24px, 4.4vw, 80px); /* side padding at the screen edges (alphamark.design: 64px at 1440, 77px at 1920) */
+}
+
+/* Sections below the hero — one brand blue, one night navy, one light card grey */
+:root {
+  --brand: #2f5bff;
+  --night: #070b22;
+  --card: #f1f3f8;
+}

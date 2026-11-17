@@ -1,0 +1,693 @@
+/* ---------- Nav bar: menu button left · logo centre · actions right (Joby-style) ---------- */
+.nav {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  height: var(--nav-h);
+  color: var(--text);
+}
+
+/* the bar has no background of its own: it is just the logo and the controls on top of the page.
+   Only while the menu is open does it share the white sheet (so the controls stay readable). */
+.nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #fff;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* open: bar and menu become one white sheet — dark text on white */
+.nav[data-open='true']::before {
+  opacity: 1;
+  background: #fff;
+  border-bottom-color: transparent;
+}
+
+.nav[data-open='true'] .nav__menu,
+.nav[data-open='true'] .logo {
+  color: var(--ink);
+}
+
+/* the bar button flips to dark when the bar is white */
+.nav[data-open='true'] .nav__cta {
+  background: var(--ink);
+  color: #fff;
+}
+
+.nav__bar {
+  position: relative;
+  z-index: 2; /* stays above the white menu sheet so the logo and Close button remain visible */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* menu button */
+.nav__menu {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  padding: 0 4px;
+  margin-right: -4px;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--text);
+  transition: color 0.3s ease;
+}
+
+.nav__lines {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 12px;
+}
+
+.nav__lines i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 0.35s var(--ease-out);
+}
+
+.nav__lines i:first-child {
+  top: 0;
+}
+
+.nav__lines i:last-child {
+  bottom: 0;
+}
+
+/* open: the two lines merge into one, like the Joby reference */
+.nav__menu[aria-expanded='true'] .nav__lines i:first-child {
+  transform: translateY(5.25px);
+}
+
+.nav__menu[aria-expanded='true'] .nav__lines i:last-child {
+  transform: translateY(-5.25px);
+}
+
+/* logo */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: var(--text);
+  transition: color 0.3s ease;
+}
+
+.logo__svg {
+  display: block;
+  width: auto;
+  height: 26px;
+}
+
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* ---------- Half-size white menu panel (Joby structure, AccessGrid look) ---------- */
+.nav__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(2, 6, 25, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.35s ease,
+    visibility 0s linear 0.35s;
+}
+
+.nav__scrim[data-open='true'] {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding-top: var(--nav-h);
+  overflow: hidden;
+  color: var(--ink);
+  background: #fff;
+  border-radius: 0 0 28px 28px;
+  box-shadow: 0 50px 90px -30px rgba(2, 8, 40, 0.55);
+  clip-path: inset(0 0 100% 0 round 0 0 28px 28px);
+  visibility: hidden;
+  transition:
+    clip-path 0.6s var(--ease-out),
+    visibility 0s linear 0.6s;
+}
+
+/* content row: same container as the bar, so the list lines up under the logo */
+.menu__inner {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.34fr) minmax(0, 1fr);
+  gap: 24px;
+  width: 100%;
+  max-width: var(--wrap);
+  height: min(500px, calc(100svh - var(--nav-h) - 40px));
+  margin-inline: auto;
+  padding: 6px var(--gutter) 24px;
+}
+
+.menu[data-open='true'] {
+  clip-path: inset(0 0 0 0 round 0 0 28px 28px);
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+/* left: the big page list */
+.menu__nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+  padding: 14px 20px 0 0;
+}
+
+.menu__list {
+  display: grid;
+  gap: 0;
+}
+
+.menu__item {
+  display: inline-block;
+  font-size: clamp(26px, 2.2vw, 31px);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.3;
+  color: rgba(5, 15, 58, 0.4);
+  transition: color 0.2s ease;
+}
+
+.menu__item:hover,
+.menu__item[aria-current='true'] {
+  color: var(--ink);
+}
+
+.menu__foot {
+  display: grid;
+  gap: 18px;
+}
+
+.menu__legal {
+  display: flex;
+  gap: 18px;
+}
+
+.menu__legal a {
+  font-size: 12.5px;
+  color: #6b7490;
+}
+
+.menu__legal a:hover {
+  color: var(--ink);
+}
+
+/* right: illustrated cells, extra links, promo row */
+.menu__stage {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  animation: stage-in 0.4s var(--ease-out) both;
+}
+
+@keyframes stage-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.menu__cells {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  gap: 1px;
+  background: #e6e9f2;
+  border: 1px solid #e6e9f2;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.menu__cells[data-n='1'] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.menu__cells[data-n='2'] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.menu__cells[data-n='3'] {
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.menu__cells[data-n='3'] .cell:first-child {
+  grid-row: span 2;
+}
+
+/* the two smaller cells: text on the left, a larger drawing on the right */
+.menu__cells[data-n='3'] .cell:not(:first-child) {
+  flex-direction: row;
+  align-items: stretch;
+  gap: 8px;
+  padding: 18px 8px 0 20px;
+}
+
+.menu__cells[data-n='3'] .cell:not(:first-child) .cell__head {
+  flex: 0 0 40%;
+  align-content: start;
+}
+
+.menu__cells[data-n='3'] .cell:not(:first-child) .cell__art {
+  margin-top: 0;
+  overflow: hidden; /* the drawing and its animation stay inside their own box */
+}
+
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: 18px 20px 0;
+  overflow: hidden;
+  background: #fff;
+  transition: background-color 0.25s ease;
+}
+
+.cell:hover,
+.cell:focus-visible {
+  background: #fafbff;
+}
+
+.cell:focus-visible {
+  outline-offset: -3px;
+}
+
+.cell__head {
+  display: grid;
+  gap: 5px;
+}
+
+.cell__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16.5px;
+  font-weight: 550;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.cell__tag {
+  padding: 1px 8px;
+  border: 1px solid #d9e1ff;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: #2f5bff;
+  background: #f1f4ff;
+}
+
+.cell__desc {
+  max-width: 36ch;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #5a6479;
+}
+
+.cell__art {
+  flex: 1;
+  min-height: 0;
+  display: block;
+  margin-top: 6px;
+}
+
+.art {
+  width: 100%;
+  height: 100%;
+}
+
+.menu__more {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  padding-inline: 4px;
+}
+
+.menu__more-label {
+  font-size: 12.5px;
+  color: #6b7490;
+}
+
+.menu__more ul {
+  display: contents;
+}
+
+.menu__more a {
+  display: inline-block;
+  padding: 5px 12px;
+  border: 1px solid #e3e7f0;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.menu__more a:hover {
+  border-color: #2f5bff;
+  color: #2f5bff;
+}
+
+.menu__promo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: #f4f6fb;
+}
+
+.menu__promo-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #dfe4ee;
+  border-radius: 50%;
+  background: #fff;
+  color: #2f5bff;
+}
+
+.menu__promo-text {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.menu__promo-text strong {
+  font-size: 15px;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+}
+
+.menu__promo-text span {
+  font-size: 13px;
+  color: #5a6479;
+}
+
+.menu__promo-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex: none;
+  padding: 9px 14px;
+  border: 1px solid #dfe4ee;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: border-color 0.2s ease;
+}
+
+.menu__promo-cta:hover {
+  border-color: #2f5bff;
+}
+
+/* ---------- Illustrations: grey construction + blue drawing ---------- */
+.art .g {
+  fill: none;
+  stroke: #cdd5e6;
+  stroke-width: 1;
+}
+
+.art .g--dash {
+  stroke-dasharray: 3 4;
+}
+
+.art .b {
+  fill: none;
+  stroke: #2f5bff;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.art .b--thin {
+  stroke-width: 1;
+  stroke-opacity: 0.75;
+}
+
+.art .fillw {
+  fill: #fff;
+}
+
+.art .dot,
+.art .dot-fill {
+  fill: #2f5bff;
+}
+
+.art .g-dot {
+  fill: #cdd5e6;
+}
+
+.art .halo {
+  fill: #2f5bff;
+  fill-opacity: 0.14;
+}
+
+.art .hl {
+  fill: rgba(47, 91, 255, 0.1);
+}
+
+.art .flow {
+  fill: none;
+  stroke: #2f5bff;
+  stroke-width: 1.2;
+  stroke-dasharray: 4 6;
+  stroke-linecap: round;
+  opacity: 0.55;
+}
+
+.art .art-text {
+  font: 600 11px var(--font-sans);
+  fill: #2f5bff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cell:is(:hover, :focus-visible) .art .b {
+    stroke-dasharray: 1;
+    animation: art-draw 0.9s var(--ease-io) both;
+    animation-delay: calc(var(--i, 0) * 70ms);
+  }
+
+  .cell:is(:hover, :focus-visible) .art .flow {
+    animation: art-flow 1.1s linear infinite;
+  }
+
+  .cell:is(:hover, :focus-visible) .art .spin {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: art-spin 16s linear infinite;
+  }
+
+  .cell:is(:hover, :focus-visible) .art .pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: art-pulse 1.6s ease-out infinite;
+  }
+}
+
+@keyframes art-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes art-flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+@keyframes art-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes art-pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+/* ---------- Phone / small tablet drawer (white) ---------- */
+html[data-scroll-locked] {
+  overflow: hidden;
+}
+
+.drawer {
+  position: fixed;
+  inset: var(--nav-h) 0 0 0;
+  z-index: 49;
+  overflow: hidden;
+  color: var(--ink);
+  background: #fff;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.2s ease,
+    transform 0.25s var(--ease-out),
+    visibility 0s linear 0.2s;
+}
+
+.drawer[data-open='true'] {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+
+.drawer__track {
+  display: flex;
+  width: 200%;
+  height: 100%;
+  transition: transform 0.35s var(--ease-out);
+}
+
+.drawer[data-view='detail'] .drawer__track {
+  transform: translateX(-50%);
+}
+
+.drawer__pane {
+  width: 50%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 8px var(--gutter) 32px;
+}
+
+.drawer__row,
+.drawer__back {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 58px;
+  border-bottom: 1px solid #e8ebf3;
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+  text-align: left;
+}
+
+.drawer__row svg {
+  color: #98a1b8;
+}
+
+.drawer__back {
+  justify-content: flex-start;
+  gap: 12px;
+  min-height: 52px;
+  font-size: 14px;
+  letter-spacing: 0;
+  color: #5a6479;
+}
+
+.drawer__title {
+  margin: 22px 0 6px;
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+
+.drawer__link {
+  display: block;
+  padding: 14px 0;
+  border-bottom: 1px solid #e8ebf3;
+}
+
+.drawer__link-label {
+  display: block;
+  font-size: 17px;
+  font-weight: 550;
+  color: var(--ink);
+}
+
+.drawer__link-desc {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  color: #5a6479;
+}
+
+.drawer__all {
+  display: inline-block;
+  margin-top: 22px;
+  font-weight: 600;
+  color: #2f5bff;
+}
+
+.drawer__cta {
+  display: grid;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+/* ---------- Breakpoints ---------- */
+@media (max-width: 559px) {
+  /* no room next to the logo and Menu on a phone; the button is in the menu drawer */
+  .nav__cta {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav,
+  .menu,
+  .menu__stage,
+  .nav__scrim,
+  .drawer,
+  .drawer__track,
+  .nav__lines i {
+    transition: none;
+    animation: none;
+  }
+}
