@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Nav } from './Nav/Nav'
 import { Footer } from './sections/Close'
+import { useOverlayScrollbars } from '../lib/useOverlayScrollbars'
 
 /*
   Shared frame for every route: navbar, <main id="main"> (the mobile menu makes it inert while open),
@@ -46,6 +47,7 @@ function useScrollOnNavigate() {
 }
 
 export function Layout() {
+  useOverlayScrollbars()
   useInternalLinks()
   useScrollOnNavigate()
   return (

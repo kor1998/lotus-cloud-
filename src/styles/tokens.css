@@ -72,7 +72,10 @@
   --radius-m: 18px;
   --nav-h: 60px;
   --wrap: 2000px;
+  --copycol: clamp(420px, 34vw, 720px); /* hero text column */
   --gutter: clamp(24px, 4.4vw, 80px); /* side padding at the screen edges (alphamark.design: 64px at 1440, 77px at 1920) */
+  /* where content starts, measured from the screen edge: the gutter, or more once the page is wider than --wrap */
+  --edge: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
 }
 
 /* Sections below the hero — one brand blue, one night navy, one light card grey */

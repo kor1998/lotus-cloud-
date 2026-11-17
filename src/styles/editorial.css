@@ -1,0 +1,343 @@
+/* ============================================================
+   Editorial layer — ruled rows and open numerals instead of boxed cards.
+   Applies to: Why Lotus Cloud, Industries, Academy, Technology ecosystem.
+   Principles taken from alphamark.design: hairline dividers, large calm type, content on one grid,
+   one accent colour, very few shapes. Hover-only motion.
+   ============================================================ */
+:root {
+  --rule: rgba(5, 15, 58, 0.15);
+}
+
+.rowcode {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--brand);
+}
+
+/* ---------- Why: open numerals ---------- */
+.statrow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: clamp(48px, 6vw, 96px);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  container-type: inline-size; /* the value size below is measured from this row, so "Google Cloud" always fits its column */
+}
+
+.statrow__item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(28px, 3.6vw, 52px) clamp(16px, 2.4vw, 36px);
+}
+
+.statrow__item:first-child {
+  padding-left: 0;
+}
+
+.statrow__item + .statrow__item {
+  border-left: 1px solid var(--rule);
+}
+
+.statrow dt {
+  /* all four values share one size: as large as "Google Cloud" allows inside a quarter of the row */
+  font-size: clamp(1.5rem, 3.5cqi, 5rem);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1.05;
+  white-space: nowrap;
+  color: var(--ink);
+}
+
+.statrow dd {
+  margin: 16px 0 0;
+  font-size: 15px;
+  color: rgba(5, 15, 58, 0.66);
+}
+
+/* ---------- Why: reasons as ruled rows ---------- */
+.rrows {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(40px, 6vw, 112px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.rrow {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 6px 16px;
+  padding: 30px 0;
+  border-top: 1px solid var(--rule);
+}
+
+.rrow .rowcode {
+  grid-row: 1 / span 2;
+  padding-top: 5px;
+}
+
+.rrow__title {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+}
+
+.rrow__text {
+  max-width: 46ch;
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(5, 15, 58, 0.7);
+}
+
+/* ---------- Industries ---------- */
+.irows {
+  border-top: 1px solid var(--rule);
+}
+
+.irow {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 5fr) minmax(0, 6fr) 40px;
+  align-items: center;
+  gap: 24px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.irow__title {
+  font-size: clamp(1.5rem, 1.1rem + 1.1vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  transition: color 0.25s ease;
+}
+
+.irow__text {
+  max-width: 52ch;
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(5, 15, 58, 0.7);
+}
+
+.irow__arrow {
+  display: grid;
+  place-items: center;
+  justify-self: end;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  color: var(--ink);
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.3s var(--ease-out);
+}
+
+.irow:hover .irow__title {
+  color: var(--brand);
+}
+
+.irow:hover .irow__arrow {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #fff;
+  transform: translateX(4px);
+}
+
+/* ---------- Academy ---------- */
+.arows,
+.irows,
+.rrows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.arows {
+  border-top: 1px solid var(--rule);
+}
+
+.arow {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 5fr) minmax(0, 6fr) auto;
+  align-items: center;
+  gap: 24px;
+  padding: clamp(32px, 4vw, 52px) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.arow__title {
+  font-size: clamp(1.7rem, 1.1rem + 1.8vw, 2.5rem);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  text-wrap: balance;
+  transition: color 0.25s ease;
+}
+
+.arow__text {
+  max-width: 50ch;
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(5, 15, 58, 0.7);
+}
+
+.arow__go {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--brand);
+}
+
+.arow__go svg {
+  transition: transform 0.25s var(--ease-out);
+}
+
+.arow:hover .arow__title {
+  color: var(--brand);
+}
+
+.arow:hover .arow__go svg {
+  transform: translateX(5px);
+}
+
+/* ---------- Technology ecosystem: one hairline table ---------- */
+.etable {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 24px;
+  background: var(--rule);
+}
+
+.ecell {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: clamp(22px, 2.4vw, 32px);
+  background: #fff;
+  transition: background-color 0.25s ease;
+}
+
+.ecell:hover {
+  background: #f5f8ff;
+}
+
+.ecell__icon {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.ecell__title {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.ecell__text {
+  margin-top: 6px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: rgba(5, 15, 58, 0.7);
+}
+
+@media (min-width: 720px) {
+  .etable {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .etable {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .ecell {
+    min-height: 250px;
+  }
+}
+
+/* ---------- tablets and phones ---------- */
+@media (max-width: 899px) {
+  .rrows {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .arow {
+    grid-template-columns: 64px minmax(0, 1fr);
+    row-gap: 10px;
+  }
+
+  .arow__title,
+  .arow__text,
+  .arow__go {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 719px) {
+  .statrow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .statrow__item {
+    padding: 26px 16px;
+  }
+
+  .statrow dt {
+    font-size: clamp(1.15rem, 6.3cqi, 3rem); /* two columns on phones */
+  }
+
+  .statrow__item:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .statrow__item:nth-child(n + 3) {
+    border-top: 1px solid var(--rule);
+  }
+
+  .irow {
+    grid-template-columns: minmax(0, 1fr) 40px;
+    gap: 8px 16px;
+    padding: 26px 0;
+  }
+
+  .irow .rowcode,
+  .irow__title,
+  .irow__text {
+    grid-column: 1;
+  }
+
+  .irow__arrow {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    align-self: center;
+  }
+
+  .rrow {
+    grid-template-columns: 44px minmax(0, 1fr);
+    padding: 24px 0;
+  }
+
+  .etable {
+    grid-template-columns: minmax(0, 1fr);
+    border-radius: 20px;
+  }
+
+  .ecell {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 18px;
+  }
+}

@@ -41,7 +41,7 @@
 /* thin vertical frame rails */
 .hero__rails {
   position: absolute;
-  inset: 0 var(--gutter); /* rails sit on the same edge padding as the logo and the Menu button */
+  inset: 0 var(--edge); /* rails sit on the same edge as the logo and the Menu button */
   z-index: -1;
   pointer-events: none;
   border-inline: 1px solid rgba(190, 212, 255, 0.14);
@@ -67,7 +67,7 @@
   order: 2;
   position: relative;
   z-index: 2;
-  max-width: 560px;
+  max-width: var(--copycol);
 }
 
 .hero__chip {
@@ -156,7 +156,7 @@
 @media (min-width: 1024px) {
   .hero__inner {
     display: grid;
-    grid-template-columns: minmax(0, clamp(420px, 34vw, 540px)) minmax(0, 1fr);
+    grid-template-columns: minmax(0, var(--copycol)) minmax(0, 1fr);
     column-gap: 24px;
     /* the copy sits at the bottom of this box, well above the bottom of the screen */
     min-height: calc(100svh - 130px);
@@ -174,20 +174,51 @@
   .hero__figure {
     position: absolute;
     top: calc(var(--nav-h) + 8px);
-    right: var(--gutter);
+    right: var(--edge);
     order: 0;
     width: min(
-      calc(100% - 2 * var(--gutter) - clamp(420px, 34vw, 540px) - 24px),
+      calc(100vw - 2 * var(--edge) - var(--copycol) - 24px),
       calc((100svh - var(--nav-h) - 70px) * 1.32)
     );
   }
 }
 
 @media (max-width: 1023px) {
-  /* stacked layout: drawing first, copy below — the drawing is capped so the copy stays on screen */
+  /* Phones and tablets: the message comes first, the drawing follows below it (content-priority).
+     Spacing follows an 8px scale, with room above so the copy never crowds the navbar. */
+  .hero__inner {
+    gap: clamp(40px, 8vw, 64px);
+    padding-top: calc(var(--nav-h) + clamp(32px, 9vw, 72px));
+  }
+
+  .hero__copy {
+    order: 1;
+  }
+
   .hero__figure {
-    width: min(100%, 560px, max(300px, calc((100svh - var(--nav-h) - 380px) * 1.32)));
+    order: 2;
+    width: min(100%, 560px);
     margin-inline: auto;
+  }
+
+  /* the soft fade below the diagram needs far less room on a narrow screen */
+  .hero {
+    padding-bottom: clamp(88px, 11vh, 120px);
+  }
+
+  /* touch targets: at least 48px tall, 8px+ apart */
+  .hero__actions {
+    gap: 12px;
+  }
+
+  .hero__actions .btn {
+    height: 48px;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero__actions .btn {
+    flex: 1 1 100%;
   }
 }
 
@@ -493,5 +524,42 @@
 @keyframes bp-ring {
   to {
     stroke-dashoffset: -48;
+  }
+}
+
+/* Big monitors: the text steps up with the diagram, so the two stay in proportion */
+@media (min-width: 1920px) {
+  .hero__chip {
+    height: 34px;
+    font-size: 14px;
+  }
+
+  .hero__title {
+    font-size: 2.9rem;
+  }
+
+  .hero__lede {
+    font-size: 19px;
+  }
+
+  .hero__actions .btn {
+    height: 50px;
+    padding-inline: 26px;
+    font-size: 15.5px;
+  }
+}
+
+@media (min-width: 2400px) {
+  .hero__title {
+    font-size: 3.2rem;
+  }
+
+  .hero__lede {
+    font-size: 21px;
+  }
+
+  .hero__actions .btn {
+    height: 54px;
+    font-size: 16.5px;
   }
 }

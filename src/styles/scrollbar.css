@@ -1,0 +1,15 @@
+/* Overlay scrollbar theme: a slim rounded handle in the brand blue, visible on both the dark hero and the light sections. */
+.os-scrollbar.os-theme-lotus {
+  --os-size: 12px;
+  --os-padding-perpendicular: 3px;
+  --os-padding-axis: 4px;
+  --os-track-border-radius: 8px;
+  --os-track-bg: transparent;
+  --os-track-bg-hover: rgba(47, 91, 255, 0.08);
+  --os-track-bg-active: rgba(47, 91, 255, 0.12);
+  --os-handle-border-radius: 8px;
+  --os-handle-bg: rgba(104, 136, 255, 0.72);
+  --os-handle-bg-hover: rgba(94, 128, 255, 0.85);
+  --os-handle-bg-active: rgba(60, 100, 255, 0.95);
+  --os-handle-min-size: 36px;
+}

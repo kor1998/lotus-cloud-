@@ -1,6 +1,7 @@
 /*
-  Section 2 — modelled on the Mindcloud "Trusted by" strip: a short left label,
-  an evenly spaced row of marks, then the key numbers.
+  Section 2: a centred heading, then the platform names drifting past in a seamless marquee.
+  The list is rendered four times, enough to fill even a very wide screen, so the loop has no seam; the extra copies are hidden from screen readers.
+  The marquee stops on hover/focus, and is replaced by a static, wrapped row for visitors who prefer reduced motion.
   Each name carries its real brand icon (public/brand/icons).
 */
 const PLATFORMS = [
@@ -12,24 +13,33 @@ const PLATFORMS = [
   { name: 'Firebase', icon: 'firebase' },
 ] as const
 
+function Logos({ hidden = false }: { hidden?: boolean }) {
+  return (
+    <ul className="marquee__list" aria-hidden={hidden || undefined}>
+      {PLATFORMS.map((p) => (
+        <li key={p.name} className="marquee__item">
+          <img src={`/brand/icons/${p.icon}.svg`} alt="" width="26" height="26" />
+          {p.name}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 export function TrustStrip() {
   return (
     <section className="trust" aria-labelledby="trust-title">
-      <div className="trust__inner wrap">
-        <div className="trust__row">
-          <p id="trust-title" className="trust__lead">
-            Built on trusted
-            <br />
-            global platforms
-          </p>
-          <ul className="trust__logos">
-            {PLATFORMS.map((p) => (
-              <li key={p.name}>
-                <img src={`/brand/icons/${p.icon}.svg`} alt="" width="22" height="22" />
-                {p.name}
-              </li>
-            ))}
-          </ul>
+      <div className="wrap">
+        <p id="trust-title" className="trust__title">
+          Built on trusted global platforms
+        </p>
+      </div>
+      <div className="marquee">
+        <div className="marquee__track">
+          <Logos />
+          <Logos hidden />
+          <Logos hidden />
+          <Logos hidden />
         </div>
       </div>
     </section>

@@ -2,7 +2,7 @@ import type { PageData } from './types'
 
 export const drive: PageData = {
   path: '/drive',
-  title: 'Lotus Drive Organizer | Lotus Cloud | Lotus Cloud',
+  title: 'Lotus Drive Organizer | Lotus Cloud',
   hero: {
     title: 'Lotus Drive Organizer',
     lede: 'Classify documents, organize files, extract key data, and create a searchable cloud drive with AI-assisted workflows.',

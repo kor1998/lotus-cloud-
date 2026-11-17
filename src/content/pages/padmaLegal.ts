@@ -2,7 +2,7 @@ import type { PageData } from './types'
 
 export const padmaLegal: PageData = {
   path: '/products/padma-legal',
-  title: 'PADMA™ Legal Intelligence Platform | Lotus Cloud | Lotus Cloud',
+  title: 'PADMA™ Legal Intelligence Platform | Lotus Cloud',
   hero: {
     eyebrow: 'Governed Multi-Jurisdictional Legal Intelligence',
     title: 'PADMA™ Legal Intelligence Platform',

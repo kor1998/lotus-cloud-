@@ -1,45 +1,32 @@
 import { useState } from 'react'
-import { Halftone, WorldDots } from '../dots/DotArt'
+import { WorldDots } from '../dots/DotArt'
 import { lonLatToPct } from '../dots/geometry'
 import { FOOTPRINT, INDUSTRIES, SERVICES, WHY } from '../../content/home'
-import { Head, Mono } from './parts'
+import { Arrow, Head } from './parts'
 
-/** Why Lotus Cloud: big numerals in a dashboard-style bento, then six reasons as a ruled list. */
+/** Why Lotus Cloud: four open numerals between hairlines, then six reasons as ruled rows. */
 export function Why() {
-  const [years, solutions, partner, delivery] = WHY.stats
   return (
     <section className="sec sec--paper" aria-labelledby="why-title">
       <div className="wrap">
         <Head id="why-title" title={WHY.title} lede={WHY.lede} />
-        <div className="wbento">
-          <div className="tile tile--light wb1">
-            <p className="num">{years.value}</p>
-            <p className="num__label">{years.label}</p>
-          </div>
-          <div className="tile tile--blue wb2">
-            <Halftone className="tile__dots tile__dots--br" w={420} h={300} step={14} rmax={4.6} mode="corner" seed={4} />
-            <p className="num">{solutions.value}</p>
-            <p className="num__label">{solutions.label}</p>
-          </div>
-          <div className="tile tile--light wb3">
-            <img className="wb3__badge" src="/brand/google-cloud-partner.png" width="240" height="120" alt="" loading="lazy" />
-            <p className="num__label">
-              {partner.value} {partner.label}
-            </p>
-          </div>
-          <div className="tile tile--night wb4">
-            <WorldDots className="wb4__map" />
-            <p className="num num--sm">{delivery.value}</p>
-            <p className="num__label">{delivery.label}</p>
-          </div>
-        </div>
+        <dl className="statrow">
+          {WHY.stats.map((s) => (
+            <div key={s.value} className="statrow__item">
+              <dt>{s.value}</dt>
+              <dd>{s.label}</dd>
+            </div>
+          ))}
+        </dl>
 
-        <ul className="reasons">
+        <ul className="rrows">
           {WHY.cards.map((c) => (
-            <li key={c.title} className="reasons__item">
-              <Mono>{c.mono}</Mono>
-              <h3 className="card__title">{c.title}</h3>
-              <p className="card__text">{c.desc}</p>
+            <li key={c.title} className="rrow">
+              <span className="rowcode" aria-hidden="true">
+                {c.mono}
+              </span>
+              <h3 className="rrow__title">{c.title}</h3>
+              <p className="rrow__text">{c.desc}</p>
             </li>
           ))}
         </ul>
@@ -48,26 +35,29 @@ export function Why() {
   )
 }
 
-/** Eight industries as a bento: Healthcare leads in blue, Nonprofit closes on night. */
+const slug = (t: string) => t.toLowerCase().replace(/\s+/g, '-')
+
+/** Eight industries as a ruled list: each row opens that sector on the Industries page. */
 export function Industries() {
   return (
     <section className="sec sec--white" aria-labelledby="industries-title">
       <div className="wrap">
         <Head id="industries-title" title={INDUSTRIES.title} lede={INDUSTRIES.lede} />
-        <ul className="ibento">
-          {INDUSTRIES.items.map((c, i) => {
-            const tone = i === 0 ? 'tile--blue' : i === 7 ? 'tile--night' : 'tile--light'
-            return (
-              <li key={c.title} className={`b i${i + 1}`}>
-                <div className={`tile ${tone}`}>
-                  {i === 0 && <Halftone className="tile__dots tile__dots--br" w={460} h={380} step={15} rmax={5} mode="corner" seed={7} />}
-                  <Mono>{c.mono}</Mono>
-                  <h3 className="tile__title">{c.title}</h3>
-                  <p className="tile__text">{c.desc}</p>
-                </div>
-              </li>
-            )
-          })}
+        <ul className="irows">
+          {INDUSTRIES.items.map((c) => (
+            <li key={c.title}>
+              <a className="irow" href={`/industries#${slug(c.title)}`}>
+                <span className="rowcode" aria-hidden="true">
+                  {c.mono}
+                </span>
+                <h3 className="irow__title">{c.title}</h3>
+                <p className="irow__text">{c.desc}</p>
+                <span className="irow__arrow" aria-hidden="true">
+                  <Arrow />
+                </span>
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
     </section>

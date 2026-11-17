@@ -1,7 +1,7 @@
 import { Art, type ArtName } from '../Nav/Art'
-import { Halftone, Sphere, Trend } from '../dots/DotArt'
+import { Halftone, Sphere } from '../dots/DotArt'
 import { ACADEMY, OFFER, PLATFORMS, RESEARCH } from '../../content/home'
-import { Head, TextLink } from './parts'
+import { Arrow, Head, TextLink } from './parts'
 
 /** Five service lines as a bento: one blue lead card, one night card, three light cards. */
 export function Offer() {
@@ -101,13 +101,14 @@ export function Platforms() {
   )
 }
 
-/** Academy: three stages along one rising dotted line. */
+/** Academy: three programmes as large ruled rows, each one a link. */
 export function Academy() {
   return (
     <section className="sec sec--paper" aria-labelledby="academy-title">
       <div className="wrap">
         <Head
           id="academy-title"
+          kicker={ACADEMY.label}
           title={ACADEMY.title}
           lede={ACADEMY.lede}
           action={
@@ -116,26 +117,23 @@ export function Academy() {
             </a>
           }
         />
-        <div className="path">
-          <div className="path__chart" aria-hidden="true">
-            <Trend className="path__svg" />
-            {[1, 2, 3].map((n) => (
-              <span key={n} className={`path__mark path__mark--${n}`}>
-                <b>{String(n).padStart(2, '0')}</b>
-              </span>
-            ))}
-          </div>
-          <ol className="path__cols">
-            {ACADEMY.programs.map((p, i) => (
-              <li key={p.title} className="path__col">
-                <span className="path__num">{String(i + 1).padStart(2, '0')}</span>
-                <h3 className="tile__title">{p.title}</h3>
-                <p className="card__text">{p.desc}</p>
-                <TextLink href={p.href}>Explore program</TextLink>
-              </li>
-            ))}
-          </ol>
-        </div>
+        <ol className="arows">
+          {ACADEMY.programs.map((p, i) => (
+            <li key={p.title}>
+              <a className="arow" href={p.href}>
+                <span className="rowcode" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="arow__title">{p.title}</h3>
+                <p className="arow__text">{p.desc}</p>
+                <span className="arow__go">
+                  Explore program
+                  <Arrow />
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   )

@@ -1,12 +1,17 @@
 import { PageHero } from '../components/page/PageHero'
-import { useDocumentTitle } from '../lib/useDocumentTitle'
+import { usePageMeta } from '../lib/usePageMeta'
 
 /*
   Sign-in belongs to the live Lotus Cloud portal (real accounts, Google sign-in). This build has no account
   system, so the page keeps the live wording and sends people on to the portal instead of showing a fake form.
 */
 export default function Login() {
-  useDocumentTitle('Lotus Cloud | Enterprise AI and Cloud Platforms')
+  usePageMeta({
+    title: 'Lotus Cloud | Enterprise AI and Cloud Platforms',
+    description: 'Sign in to the Lotus Cloud portal.',
+    path: '/login',
+    noindex: true,
+  })
   return (
     <>
       <PageHero

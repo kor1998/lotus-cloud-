@@ -1,96 +1,99 @@
-/* ---------- Section 2: trusted platforms + numbers (on the page colour) ---------- */
+/* ---------- Section 2: trusted platforms (sits on plain page colour, below the hero's fade) ---------- */
 .trust {
+  padding-block: clamp(40px, 5vw, 64px) 8px;
   background: var(--paper);
   color: var(--ink);
 }
 
-.trust__inner {
-  padding-block: 8px 0;
+.trust__title {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgba(5, 15, 58, 0.62);
 }
 
-.trust__row {
-  display: grid;
-  gap: 28px;
+.marquee {
+  position: relative;
+  margin-top: 28px;
+  overflow: hidden;
+  /* names fade in and out at both edges */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+}
+
+.marquee__list {
+  display: flex;
+  flex: none;
   align-items: center;
 }
 
-.trust__lead {
-  font-size: 13.5px;
-  line-height: 1.5;
-  color: rgba(5, 15, 58, 0.6);
-}
-
-.trust__logos {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px 16px;
-}
-
-.trust__logos li {
+.marquee__item {
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  font-size: 18px;
+  gap: 10px;
+  margin-right: clamp(40px, 6vw, 88px); /* same spacing after the last item, so the loop has no seam */
+  font-size: 19px;
   font-weight: 600;
   letter-spacing: -0.025em;
-  color: rgba(5, 15, 58, 0.5);
   white-space: nowrap;
+  color: rgba(5, 15, 58, 0.55);
 }
 
-.trust__stats {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-top: 56px;
-  border-top: 1px solid rgba(5, 15, 58, 0.1);
-}
-
-.trust__stat {
-  padding: 22px 0 0;
-}
-
-.trust__stat dt {
-  font-size: 1.5rem;
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  color: var(--ink);
-}
-
-.trust__stat dd {
-  margin: 4px 0 0;
-  font-size: 13.5px;
-  color: rgba(5, 15, 58, 0.6);
-}
-
-@media (min-width: 900px) {
-  .trust__row {
-    grid-template-columns: 180px minmax(0, 1fr);
-    gap: 48px;
-  }
-
-  .trust__logos {
-    grid-template-columns: repeat(3, auto);
-    justify-content: space-between;
-  }
-
-  .trust__stats {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .trust__stat + .trust__stat {
-    padding-left: 28px;
-    border-left: 1px solid rgba(5, 15, 58, 0.1);
-  }
-}
-
-.trust__logos img {
+.marquee__item img {
   flex: none;
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   object-fit: contain;
 }
 
-@media (min-width: 1240px) {
-  .trust__logos {
-    grid-template-columns: repeat(6, auto);
+@media (prefers-reduced-motion: no-preference) {
+  .marquee__track {
+    animation: marquee 40s linear infinite;
+  }
+
+  .marquee:hover .marquee__track,
+  .marquee:focus-within .marquee__track {
+    animation-play-state: paused;
+  }
+}
+
+/* reduced motion: a still, centred row; the duplicate copy is not needed */
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .marquee__track {
+    width: auto;
+    justify-content: center;
+  }
+
+  .marquee__list {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 16px;
+  }
+
+  .marquee__list[aria-hidden='true'] {
+    display: none;
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-25%); /* exactly one copy of four */
+  }
+}
+
+@media (max-width: 639px) {
+  .marquee__item {
+    font-size: 17px;
   }
 }

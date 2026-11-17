@@ -35,16 +35,13 @@ export function Ecosystem() {
     <section className="sec sec--white" aria-labelledby="eco-title">
       <div className="wrap">
         <Head id="eco-title" title={ECOSYSTEM.title} lede={ECOSYSTEM.lede} />
-        <ul className="ebento">
-          {ECOSYSTEM.items.map((c, i) => (
-            <li key={c.title} className={`b e${i + 1}`}>
-              <div className={i === 0 ? 'tile tile--blue' : 'tile tile--light'}>
-                {i === 0 && <Halftone className="tile__dots tile__dots--br" w={420} h={300} step={14} rmax={4.6} mode="corner" seed={6} />}
-                <span className="brand-tile">
-                  <img src={c.icon} alt="" width="28" height="28" loading="lazy" />
-                </span>
-                <h3 className="tile__title">{c.title}</h3>
-                <p className="tile__text">{c.desc}</p>
+        <ul className="etable">
+          {ECOSYSTEM.items.map((c) => (
+            <li key={c.title} className="ecell">
+              <img className="ecell__icon" src={c.icon} alt="" width="34" height="34" loading="lazy" />
+              <div>
+                <h3 className="ecell__title">{c.title}</h3>
+                <p className="ecell__text">{c.desc}</p>
               </div>
             </li>
           ))}

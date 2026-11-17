@@ -63,6 +63,8 @@ export type Block =
 export interface PageData {
   path: string
   title: string
+  /** search-result snippet; when missing the hero intro line is used */
+  description?: string
   hero: { eyebrow?: string; title: string; lede?: string; actions?: Link[] }
   blocks: Block[]
 }

@@ -1,7 +1,7 @@
 import type { FormEvent } from 'react'
 import { PageHero } from '../components/page/PageHero'
 import { Leadership } from '../components/sections/Close'
-import { useDocumentTitle } from '../lib/useDocumentTitle'
+import { usePageMeta } from '../lib/usePageMeta'
 
 /*
   Contact. The live form writes to the site's own database; this build has no backend, so the form
@@ -62,7 +62,11 @@ function sendByEmail(e: FormEvent<HTMLFormElement>) {
 }
 
 export default function Contact() {
-  useDocumentTitle('Contact Lotus Cloud | Lotus Cloud')
+  usePageMeta({
+    title: 'Contact Lotus Cloud | Lotus Cloud',
+    description: 'Talk to Lotus Cloud about Agentic AI, healthcare AI, Google Cloud, training and applied research for your organization.',
+    path: '/contact',
+  })
   return (
     <>
       <PageHero

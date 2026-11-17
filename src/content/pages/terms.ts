@@ -3,6 +3,7 @@ import type { PageData } from './types'
 export const terms: PageData = {
   path: '/terms',
   title: 'Terms | Lotus Cloud',
+  description: 'The terms for using the Lotus Cloud website, which provides general information about Lotus Cloud products, services, and training.',
   hero: {
     eyebrow: 'Legal',
     title: 'Terms',

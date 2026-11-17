@@ -1,8 +1,13 @@
 import { PageHero } from '../components/page/PageHero'
-import { useDocumentTitle } from '../lib/useDocumentTitle'
+import { usePageMeta } from '../lib/usePageMeta'
 
 export default function NotFound() {
-  useDocumentTitle('Page not found | Lotus Cloud')
+  usePageMeta({
+    title: 'Page not found | Lotus Cloud',
+    description: 'This page could not be found.',
+    path: '/404',
+    noindex: true,
+  })
   return (
     <>
       <PageHero
