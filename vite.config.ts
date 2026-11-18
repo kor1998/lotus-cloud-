@@ -7,4 +7,6 @@ export default defineConfig({
   // one copy of React for the app and for react-router
   resolve: { dedupe: ['react', 'react-dom'] },
   optimizeDeps: { include: ['react', 'react-dom', 'react-router-dom'] },
+  // files that tests and builds write must never make the dev server reload the open page
+  server: { watch: { ignored: ['**/test-results/**', '**/playwright-report/**', '**/dist/**', '**/public/sitemap.xml'] } },
 })

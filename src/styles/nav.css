@@ -1,32 +1,16 @@
-/* ---------- Nav bar: menu button left · logo centre · actions right (Joby-style) ---------- */
+/* ---------- Nav bar: a floating white card with a gap on every side: logo left, Menu right ---------- */
 .nav {
   position: fixed;
   inset: 0 0 auto 0;
   z-index: 50;
   height: var(--nav-h);
-  color: var(--text);
+  color: var(--ink);
   transition: transform 0.45s var(--ease-out);
 }
 
 /* the footer has come into view: the bar slides out of the way (never while the menu is open) */
 .nav[data-away='true']:not([data-open='true']) {
   transform: translateY(-100%);
-}
-
-/* No bar colour, no blur, no filter: the logo and buttons keep their normal colours. White on dark sections;
-   when a white section is behind them they turn dark (Nav.tsx sets one data-tone for the whole bar, so everything switches together). */
-.nav .logo,
-.nav .nav__menu {
-  transition: none; /* the look swaps in one step, with no half-faded colours in between */
-}
-
-.nav[data-tone='light'] .logo {
-  color: var(--ink);
-}
-
-.nav[data-tone='light'] .nav__menu {
-  background: var(--ink);
-  color: #fff;
 }
 
 /* keyboard focus draws its ring inside the button, not outside it, and keeps the pill shape */
@@ -36,8 +20,7 @@
   border-radius: 999px;
 }
 
-/* at the top of the page the bar has no background: just the logo and the controls over the hero.
-   While the menu is open it shares the white sheet (so the controls stay readable). */
+/* menu open: a white sheet slides down behind the card and the card melts into it */
 .nav::before {
   content: '';
   position: absolute;
@@ -48,31 +31,32 @@
   transition: opacity 0.3s ease;
 }
 
-/* open: bar and menu become one white sheet — dark text on white */
 .nav[data-open='true']::before {
   opacity: 1;
-  background: #fff;
-  border-bottom-color: transparent;
 }
 
-.nav[data-open='true'] .logo {
-  color: var(--ink);
-}
-
-/* menu open: the bar is a white sheet, so the button is the dark pill */
-.nav[data-open='true'] .nav__menu {
-  background: var(--ink);
-  color: #fff;
+.nav[data-open='true'] .nav__bar {
+  box-shadow: none; /* no outline while it is part of the open sheet */
 }
 
 .nav__bar {
   position: relative;
   z-index: 2; /* stays above the white menu sheet so the logo and Close button remain visible */
-  height: 100%;
+  height: var(--nav-bar);
+  /* the card starts a little left of the page content edge, so the logo inside lines up with every section */
+  margin: var(--nav-gap) calc(var(--edge) - var(--nav-pad));
+  padding-inline: var(--nav-pad);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px rgba(5, 15, 58, 0.08); /* a hairline so the card still reads on white sections */
+}
+
+.nav .logo {
+  color: var(--ink);
 }
 
 /* menu button */
@@ -84,12 +68,11 @@
   padding: 0 14px;
   font-size: 13.5px;
   font-weight: 500;
-  /* solid white pill, no border; it does not react to hover or press */
+  /* solid dark pill on the white card, no border; it does not react to hover or press */
   border: 0;
   border-radius: 999px;
-  background: #fff;
-  color: var(--ink);
-  transition: none; /* the look swaps in one step, with no half-faded colours in between */
+  background: var(--ink);
+  color: #fff;
 }
 
 .nav__lines {
@@ -189,9 +172,9 @@
   gap: 24px;
   width: 100%;
   max-width: var(--wrap);
-  height: min(500px, calc(100svh - var(--nav-h) - 40px));
+  height: min(520px, calc(100svh - var(--nav-h) - 40px));
   margin-inline: auto;
-  padding: 6px var(--gutter) 24px;
+  padding: 14px var(--gutter) 26px; /* a little air under the bar, a little more under the cards */
 }
 
 .menu[data-open='true'] {
@@ -205,8 +188,9 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  gap: 28px; /* the button never crowds the last page link */
   min-height: 0;
-  padding: 14px 20px 0 0;
+  padding: 0 20px 0 0; /* the list starts level with the top edge of the cards */
 }
 
 .menu__list {
@@ -231,7 +215,7 @@
 
 .menu__foot {
   display: grid;
-  gap: 18px;
+  gap: 16px;
 }
 
 .menu__cta {

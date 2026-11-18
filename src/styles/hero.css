@@ -61,6 +61,7 @@
   order: 1;
   min-width: 0;
   pointer-events: none;
+  position: relative;
 }
 
 .hero__copy {
@@ -228,6 +229,86 @@
   .bp .annot {
     display: none;
   }
+}
+
+/* the light layer sits exactly on top of the drawing, on its own compositor layer */
+.bp--lights {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Every intro animation waits for the page to be painted (<html data-ready>, set in BlueprintDiagram.tsx),
+   so a slow computer plays it from its first frame instead of skipping to the end. */
+html:not([data-ready='true']) .bp *,
+html:not([data-ready='true']) .hero__copy > *,
+html:not([data-ready='true']) .hero__figure {
+  animation-play-state: paused !important;
+}
+
+/* Weak computers: the drawing arrives as one smooth fade-and-rise of the whole figure (the browser's graphics chip does
+   it, so it stays smooth even when the processor is busy), instead of about a hundred separate stroke animations. */
+html[data-motion='lite'] .bp .edge {
+  stroke-dashoffset: 0;
+  animation: none;
+}
+
+html[data-motion='lite'] .bp .fade-in {
+  opacity: 1;
+  animation: none;
+}
+
+html[data-motion='lite'] .bp .rise,
+html[data-motion='lite'] .bp .module,
+html[data-motion='lite'] .bp .ring-spin {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion='lite'] .hero__figure {
+    animation: fig-in 1.1s var(--ease-out) 0.15s both;
+  }
+}
+
+/* reduced motion: no movement, but the drawing still fades in instead of snapping on */
+@media (prefers-reduced-motion: reduce) {
+  .hero__figure,
+  .hero__copy {
+    animation: fig-fade 0.9s ease both;
+  }
+}
+
+@keyframes fig-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fig-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* nothing moves while the hero is scrolled out of view or the tab is in the background */
+.hero[data-inview='false'] .bp--lights *,
+html[data-hidden='true'] .bp--lights * {
+  animation-play-state: paused !important;
+}
+
+/* weak or busy computers (see lib/useMotionBudget): no endless motion at all, the drawing simply stays still */
+html[data-motion='lite'] .bp--lights {
+  display: none;
 }
 
 /* ---------- Blueprint SVG ---------- */

@@ -130,7 +130,7 @@ for (const device of DEVICES) {
     })
 
     // ---------- sticky navigation ----------
-    test('navbar: stays on screen while scrolling (transparent, no filter), leaves only at the footer', async ({ page }) => {
+    test('navbar: stays on screen while scrolling (floating card), leaves only at the footer', async ({ page }) => {
       await open(page, '/')
       const nav = () =>
         page.evaluate(() => {
@@ -147,7 +147,6 @@ for (const device of DEVICES) {
       let n = await nav()
       expect(n.top, 'navbar left the screen while scrolling').toBeCloseTo(0, 0)
       expect(n.menuTop).toBeGreaterThanOrEqual(0)
-      expect(n.bg, 'bar must have no background colour').toBe('rgba(0, 0, 0, 0)')
       expect(n.blur === 'none' || n.blur === undefined, 'bar must not blur the page').toBe(true)
       expect(n.blend, 'no blend filter on the bar').toBe('normal')
 
@@ -162,6 +161,23 @@ for (const device of DEVICES) {
       await page.waitForTimeout(600)
       n = await nav()
       expect(n.top, 'navbar did not return above the footer').toBeCloseTo(0, 0)
+    })
+
+    test('navbar: a white card with a gap on every side, logo on the content edge', async ({ page }) => {
+      await open(page, '/')
+      const m = await page.evaluate(() => {
+        const card = document.querySelector('.nav__bar')!.getBoundingClientRect()
+        const logo = document.querySelector('.logo')!.getBoundingClientRect()
+        const menu = document.querySelector('.nav__menu')!.getBoundingClientRect()
+        return { top: card.top, left: card.left, right: innerWidth - card.right, height: card.height, bg: getComputedStyle(document.querySelector('.nav__bar')!).backgroundColor, logoGap: logo.left - card.left, menuGap: card.right - menu.right, menuInside: menu.top >= card.top && menu.bottom <= card.bottom }
+      })
+      expect(m.bg).toBe('rgb(255, 255, 255)')
+      expect(m.top, 'gap above the card').toBeGreaterThanOrEqual(8)
+      expect(m.left, 'gap left of the card').toBeGreaterThanOrEqual(8)
+      expect(m.right, 'gap right of the card').toBeGreaterThanOrEqual(8)
+      expect(m.logoGap, 'logo is inside the card, with space around it').toBeGreaterThanOrEqual(12)
+      expect(m.menuGap, 'Menu button is inside the card, with space around it').toBeGreaterThanOrEqual(12)
+      expect(m.menuInside, 'Menu button fits inside the card').toBe(true)
     })
 
     test('navbar: the menu opens from the middle of the page', async ({ page }) => {

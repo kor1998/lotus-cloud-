@@ -70,7 +70,11 @@
   /* Layout */
   --radius-s: 10px;
   --radius-m: 18px;
-  --nav-h: 60px;
+  /* floating navbar: a white card with a gap on every side */
+  --nav-gap: 10px;
+  --nav-bar: 54px; /* the card itself */
+  --nav-pad: clamp(14px, 1.4vw, 22px); /* space inside the card, left and right */
+  --nav-h: calc(var(--nav-bar) + var(--nav-gap) * 2); /* everything the bar reserves at the top of the page */
   --wrap: 2000px;
   --copycol: clamp(420px, 34vw, 720px); /* hero text column */
   --gutter: clamp(24px, 4.4vw, 80px); /* side padding at the screen edges (alphamark.design: 64px at 1440, 77px at 1920) */

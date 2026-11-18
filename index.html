@@ -5,6 +5,18 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#000207" />
+    <!-- Decides before the first paint whether this computer gets the full animation or the light one (see src/lib/useMotionBudget.ts) -->
+    <script>
+      (function () {
+        var n = navigator
+        var weak = (n.deviceMemory || 8) <= 4 || (n.hardwareConcurrency || 8) <= 2 || (n.connection && n.connection.saveData)
+        var kept = ''
+        try {
+          kept = sessionStorage.getItem('lc-motion')
+        } catch (e) {}
+        document.documentElement.setAttribute('data-motion', weak || kept === 'lite' ? 'lite' : 'full')
+      })()
+    </script>
     <meta
       name="description"
       content="Lotus Cloud builds Agentic AI and healthcare AI platforms, cloud and enterprise solutions, professional education, and applied research."

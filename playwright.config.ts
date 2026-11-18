@@ -15,7 +15,7 @@ export default defineConfig({
   timeout: 90_000,
   fullyParallel: true,
   workers: 3,
-  retries: 0,
+  retries: 1, // a dev-server reload in the middle of a test is not a layout bug; a real bug fails twice
   reporter: [['list']],
   use: {
     baseURL: 'http://127.0.0.1:5173',

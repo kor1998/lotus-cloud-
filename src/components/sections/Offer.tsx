@@ -34,7 +34,7 @@ export function Offer() {
         </ul>
 
         <div className="partner">
-          <img className="partner__badge" src="/brand/google-cloud-partner.png" width="240" height="120" alt="Google Cloud Partner" loading="lazy" />
+          <img className="partner__badge" src="/brand/google-cloud-partner.png" width="240" height="120" alt="Google Cloud Partner" loading="lazy" decoding="async" />
           <div>
             <p className="partner__title">{OFFER.partner.title}</p>
             <p className="partner__text">{OFFER.partner.desc}</p>

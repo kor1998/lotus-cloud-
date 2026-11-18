@@ -38,7 +38,7 @@ export function Ecosystem() {
         <ul className="etable">
           {ECOSYSTEM.items.map((c) => (
             <li key={c.title} className="ecell">
-              <img className="ecell__icon" src={c.icon} alt="" width="34" height="34" loading="lazy" />
+              <img className="ecell__icon" src={c.icon} alt="" width="34" height="34" loading="lazy" decoding="async" />
               <div>
                 <h3 className="ecell__title">{c.title}</h3>
                 <p className="ecell__text">{c.desc}</p>
@@ -69,7 +69,7 @@ export function Leadership({ id }: { id?: string }) {
 
         <div className="fgrid">
           <figure className="fphoto">
-            <img src="/brand/leader.jpg" width="1000" height="1000" alt="Dr. Veera B. Dasari, CEO and Chief Architect of Lotus Cloud" loading="lazy" />
+            <img src="/brand/leader.jpg" width="1000" height="1000" alt="Dr. Veera B. Dasari, CEO and Chief Architect of Lotus Cloud" loading="lazy" decoding="async" />
           </figure>
 
           <div className="fcard fcard--profile">

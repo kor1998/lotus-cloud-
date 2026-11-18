@@ -26,3 +26,17 @@ dist-ssr
 # Playwright
 test-results
 playwright-report
+
+# Generated at build/dev start by scripts/generate-sitemap.mjs (its dates change every run)
+public/sitemap.xml
+
+# Local scratch files and tool folders
+*.tmp.mjs
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.agents
+.claude
+skills-lock.json
+Thumbs.db

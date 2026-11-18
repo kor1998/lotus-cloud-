@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Nav } from './Nav/Nav'
 import { Footer } from './sections/Close'
+import { useMotionBudget } from '../lib/useMotionBudget'
 import { useOverlayScrollbars } from '../lib/useOverlayScrollbars'
 
 /*
@@ -48,6 +49,7 @@ function useScrollOnNavigate() {
 
 export function Layout() {
   useOverlayScrollbars()
+  useMotionBudget()
   useInternalLinks()
   useScrollOnNavigate()
   return (

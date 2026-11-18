@@ -12,34 +12,9 @@ const Chevron = () => (
   </svg>
 )
 
-type Tone = 'dark' | 'light'
-
-/** Is the page behind this point dark or light? (inside the hero gradient it depends on how far down we are) */
-function toneAt(x: number, y: number): Tone {
-  for (const el of document.elementsFromPoint(x, y)) {
-    if (el.closest('.nav, .os-scrollbar')) continue
-    const hero = el.closest('.hero, .phero')
-    if (hero) {
-      const r = hero.getBoundingClientRect()
-      return (y - r.top) / r.height < 0.78 ? 'dark' : 'light'
-    }
-    for (let a: Element | null = el; a && a !== document.documentElement; a = a.parentElement) {
-      const cs = getComputedStyle(a)
-      const src = cs.backgroundImage !== 'none' ? cs.backgroundImage : cs.backgroundColor
-      const m = src.match(/rgba?\(([^)]+)\)/)
-      if (!m) continue
-      const [r, g, b, alpha = '1'] = m[1].split(',').map((v) => parseFloat(v))
-      if (Number(alpha) < 0.5) continue
-      return 0.2126 * r + 0.7152 * g + 0.0722 * b < 140 ? 'dark' : 'light'
-    }
-  }
-  return 'light'
-}
-
 export function Nav() {
   const [open, setOpen] = useState(false)
   const [activeId, setActiveId] = useState('platforms')
-  const [tone, setTone] = useState<Tone>('dark') // the whole bar is either the dark-page look or the white-page look
   const { pathname } = useLocation()
   const [away, setAway] = useState(false) // the footer has come into view: it slides out of the way
   const isDesktop = useMediaQuery('(min-width: 900px)')
@@ -61,22 +36,6 @@ export function Nav() {
     let raf = 0
     const update = () => {
       raf = 0
-      const bar = headerRef.current
-      if (bar) {
-        // The bar has two looks and flips once. Dark look (white logo and button) while the dark hero is behind it;
-        // when the white page reaches the bar it flips to the light look and stays that way down the page.
-        // Scrolling back up to the hero resets it. Other dark cards and bands further down never change it.
-        const y = (bar.offsetHeight || 60) / 2
-        const hero = document.querySelector('.hero, .phero')
-        let next: Tone
-        if (hero) {
-          const r = hero.getBoundingClientRect()
-          next = y >= r.top && (y - r.top) / r.height < 0.78 ? 'dark' : 'light'
-        } else {
-          next = toneAt(window.innerWidth * 0.5, y) // pages without a hero: follow the page colour at the top
-        }
-        setTone((t) => (t === next ? t : next))
-      }
       const footer = document.querySelector('footer')
       setAway(!!footer && footer.getBoundingClientRect().top <= window.innerHeight * 0.75)
     }
@@ -125,12 +84,12 @@ export function Nav() {
   }
 
   return (
-    <header ref={headerRef} className="nav" data-open={open} data-tone={tone} data-away={away}>
+    <header ref={headerRef} className="nav" data-open={open} data-away={away}>
       <a className="skip-link" href="#main">
         Skip to main content
       </a>
 
-      <div className="nav__bar wrap">
+      <div className="nav__bar">
 
         <Logo />
 

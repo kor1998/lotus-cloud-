@@ -57,8 +57,9 @@
     animation: marquee 40s linear infinite;
   }
 
-  .marquee:hover .marquee__track,
-  .marquee:focus-within .marquee__track {
+  /* it only runs while it is on screen and the tab is in front */
+  .marquee[data-inview='false'] .marquee__track,
+  html[data-hidden='true'] .marquee__track {
     animation-play-state: paused;
   }
 }

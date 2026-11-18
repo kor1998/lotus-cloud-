@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, useEffect } from 'react'
 import { d, leftFaceMatrix, proj, rightFaceMatrix, topFaceMatrix, type Pt } from './iso'
 
 /*
@@ -100,6 +100,17 @@ function Slab({ z, under = false, delay }: { z: number; under?: boolean; delay: 
   )
 }
 
+/** The three visible faces of a cube, as path data. */
+function boxFaces(b: BoxSpec) {
+  const half = b.size / 2
+  const [x0, x1, y0, y1] = [b.cx - half, b.cx + half, b.cy - half, b.cy + half]
+  return {
+    right: d([p(x1, y0), p(x1, y1), p(x1, y1, b.h), p(x1, y0, b.h)], true),
+    left: d([p(x0, y1), p(x1, y1), p(x1, y1, b.h), p(x0, y1, b.h)], true),
+    top: d([p(x0, y0, b.h), p(x1, y0, b.h), p(x1, y1, b.h), p(x0, y1, b.h)], true),
+  }
+}
+
 function Module({ b }: { b: BoxSpec }) {
   const half = b.size / 2
   const [x0, x1, y0, y1] = [b.cx - half, b.cx + half, b.cy - half, b.cy + half]
@@ -107,9 +118,7 @@ function Module({ b }: { b: BoxSpec }) {
   const delay = dl(b.delay)
   const labelDelay = dl(b.delay + 0.9)
 
-  const right = d([p(x1, y0), p(x1, y1), p(x1, y1, b.h), p(x1, y0, b.h)], true)
-  const left = d([p(x0, y1), p(x1, y1), p(x1, y1, b.h), p(x0, y1, b.h)], true)
-  const top = d([p(x0, y0, b.h), p(x1, y0, b.h), p(x1, y1, b.h), p(x0, y1, b.h)], true)
+  const { right, left, top } = boxFaces(b)
 
   // Local text frames: origin at the top-left of each visible face.
   const [lx, ly] = p(x0, y1, b.h)
@@ -119,7 +128,6 @@ function Module({ b }: { b: BoxSpec }) {
   const [tx, ty] = p(b.cx, b.cy, b.h)
   const sh = 0.4
   const shadow = d([p(x0 + sh, y0 + sh), p(x1 + sh, y0 + sh), p(x1 + sh, y1 + sh), p(x0 + sh, y1 + sh)], true)
-  const routeIdx = ROUTES.findIndex((r) => r.id === b.id)
 
   return (
     <g className="module" data-id={b.id} style={dl(b.delay - 0.15)}>
@@ -134,9 +142,6 @@ function Module({ b }: { b: BoxSpec }) {
         <path className="edge edge--cube-side" pathLength={1} d={left} />
         <path className="edge edge--cube" pathLength={1} d={top} />
       </g>
-      {/* the top edge flashes once when the line of light reaches this cube */}
-      {routeIdx >= 0 && <path className="cube-ping" d={top} style={dl(ROUTE_START + routeIdx * ROUTE_STAGGER)} />}
-
       {sup ? (
         <g className="fade-in" style={labelDelay}>
           <path className="edge edge--dim" pathLength={1} d={ring(1.55, b.h)} />
@@ -184,7 +189,37 @@ function Module({ b }: { b: BoxSpec }) {
   )
 }
 
+/**
+ * Animations are timed by the clock, so on a busy computer a long first frame would swallow the whole intro and the
+ * drawing would just appear. This waits until the fonts are in and the browser has really painted the page, then
+ * flags <html data-ready>; the CSS holds every intro animation until then, so it always starts from its first frame.
+ */
+function useIntroGate() {
+  useEffect(() => {
+    const root = document.documentElement
+    if (root.dataset.ready === 'true') return
+    let raf = 0
+    let timer = 0
+    const go = () => {
+      window.clearTimeout(timer)
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => {
+        raf = requestAnimationFrame(() => {
+          root.dataset.ready = 'true'
+        })
+      })
+    }
+    timer = window.setTimeout(go, 1200) // never wait longer than this for fonts
+    document.fonts?.ready.then(go, go)
+    return () => {
+      window.clearTimeout(timer)
+      cancelAnimationFrame(raf)
+    }
+  }, [])
+}
+
 export const BlueprintDiagram = forwardRef<SVGSVGElement>(function BlueprintDiagram(_, ref) {
+  useIntroGate()
   const gridLines: string[] = []
   for (let v = -PLATE + GRID_STEP; v < PLATE - 0.01; v += GRID_STEP) {
     gridLines.push(d([p(v, -PLATE), p(v, PLATE)]))
@@ -202,6 +237,7 @@ export const BlueprintDiagram = forwardRef<SVGSVGElement>(function BlueprintDiag
   const callTop = callY - 74
 
   return (
+    <>
     <svg
       ref={ref}
       className="bp"
@@ -264,19 +300,13 @@ export const BlueprintDiagram = forwardRef<SVGSVGElement>(function BlueprintDiag
         </g>
       </g>
 
-      {/* traces, a soft glow under them, and a line of light that runs out to each agent and back (2 passes, then stops) */}
+      {/* traces and a soft glow under them (the moving light is drawn in the separate overlay below) */}
       <g className="routes">
         {routePaths.map((r) => (
           <path key={`u${r.id}`} className="route-under fade-in" d={r.d} style={dl(r.delay)} />
         ))}
         {routePaths.map((r) => (
           <path key={r.id} className="edge edge--route" pathLength={1} d={r.d} style={dl(r.delay - 0.5)} />
-        ))}
-        {routePaths.map((r, i) => (
-          <path key={`g${r.id}`} className="route-flow route-flow--glow" pathLength={1} d={r.d} style={dl(ROUTE_START + i * ROUTE_STAGGER)} />
-        ))}
-        {routePaths.map((r, i) => (
-          <path key={`c${r.id}`} className="route-flow" pathLength={1} d={r.d} style={dl(ROUTE_START + i * ROUTE_STAGGER)} />
         ))}
       </g>
 
@@ -308,5 +338,40 @@ export const BlueprintDiagram = forwardRef<SVGSVGElement>(function BlueprintDiag
         </text>
       </g>
     </svg>
+
+    {/* The endless motion lives in its own light layer: a line of light out to each agent and a flash on each cube.
+        Only these few strokes repaint every frame, never the whole drawing, and the layer can be paused or switched off. */}
+    <svg
+      className="bp bp--lights"
+      viewBox={`${VB.x} ${VB.y} ${VB.w} ${VB.h}`}
+      preserveAspectRatio="xMidYMid meet"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <defs>
+        {/* the light passes behind the cubes, never over them */}
+        <mask id="bp-light-mask" maskUnits="userSpaceOnUse" x={VB.x} y={VB.y} width={VB.w} height={VB.h}>
+          <rect x={VB.x} y={VB.y} width={VB.w} height={VB.h} fill="#fff" />
+          {BOXES.map((b) => {
+            const f = boxFaces(b)
+            return <path key={b.id} d={`${f.right} ${f.left} ${f.top}`} fill="#000" />
+          })}
+        </mask>
+      </defs>
+      <g mask="url(#bp-light-mask)">
+        {routePaths.map((r, i) => (
+          <path key={`g${r.id}`} className="route-flow route-flow--glow" pathLength={1} d={r.d} style={dl(ROUTE_START + i * ROUTE_STAGGER)} />
+        ))}
+        {routePaths.map((r, i) => (
+          <path key={`c${r.id}`} className="route-flow" pathLength={1} d={r.d} style={dl(ROUTE_START + i * ROUTE_STAGGER)} />
+        ))}
+      </g>
+      {/* each cube's top edge flashes at the moment the light reaches it */}
+      {BOXES.map((b) => {
+        const i = ROUTES.findIndex((r) => r.id === b.id)
+        return i >= 0 ? <path key={b.id} className="cube-ping" d={boxFaces(b).top} style={dl(ROUTE_START + i * ROUTE_STAGGER)} /> : null
+      })}
+    </svg>
+    </>
   )
 })
