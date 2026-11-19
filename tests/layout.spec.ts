@@ -163,21 +163,51 @@ for (const device of DEVICES) {
       expect(n.top, 'navbar did not return above the footer').toBeCloseTo(0, 0)
     })
 
-    test('navbar: a white card with a gap on every side, logo on the content edge', async ({ page }) => {
+    test('navbar: see-through over the hero, flips once to a white card, flips back at the hero', async ({ page }) => {
       await open(page, '/')
-      const m = await page.evaluate(() => {
-        const card = document.querySelector('.nav__bar')!.getBoundingClientRect()
-        const logo = document.querySelector('.logo')!.getBoundingClientRect()
-        const menu = document.querySelector('.nav__menu')!.getBoundingClientRect()
-        return { top: card.top, left: card.left, right: innerWidth - card.right, height: card.height, bg: getComputedStyle(document.querySelector('.nav__bar')!).backgroundColor, logoGap: logo.left - card.left, menuGap: card.right - menu.right, menuInside: menu.top >= card.top && menu.bottom <= card.bottom }
-      })
+      const look = () =>
+        page.evaluate(() => {
+          const bar = document.querySelector('.nav__bar')!
+          const card = bar.getBoundingClientRect()
+          const logo = document.querySelector('.logo')!.getBoundingClientRect()
+          const menu = document.querySelector('.nav__menu')!.getBoundingClientRect()
+          return {
+            tone: document.querySelector('.nav')!.getAttribute('data-tone'),
+            bg: getComputedStyle(bar).backgroundColor,
+            logoColor: getComputedStyle(document.querySelector('.logo')!).color,
+            menuBg: getComputedStyle(document.querySelector('.nav__menu')!).backgroundColor,
+            top: card.top, left: card.left, right: innerWidth - card.right,
+            logoGap: logo.left - card.left, menuGap: card.right - menu.right,
+            menuInside: menu.top >= card.top && menu.bottom <= card.bottom,
+          }
+        })
+
+      // on the hero: no card, white pill
+      let m = await look()
+      expect(m.tone).toBe('dark')
+      expect(m.bg, 'no card colour over the hero').toBe('rgba(0, 0, 0, 0)')
+      expect(m.menuBg, 'Menu pill is white over the hero').toBe('rgb(255, 255, 255)')
+
+      // past the hero: the white card, a dark pill, a gap on every side
+      await page.evaluate(() => window.scrollTo(0, document.querySelector('.hero')!.getBoundingClientRect().height + 200))
+      await page.waitForTimeout(500)
+      m = await look()
+      expect(m.tone).toBe('light')
       expect(m.bg).toBe('rgb(255, 255, 255)')
+      expect(m.menuBg, 'Menu pill is dark on the white card').not.toBe('rgb(255, 255, 255)')
       expect(m.top, 'gap above the card').toBeGreaterThanOrEqual(8)
       expect(m.left, 'gap left of the card').toBeGreaterThanOrEqual(8)
       expect(m.right, 'gap right of the card').toBeGreaterThanOrEqual(8)
       expect(m.logoGap, 'logo is inside the card, with space around it').toBeGreaterThanOrEqual(12)
       expect(m.menuGap, 'Menu button is inside the card, with space around it').toBeGreaterThanOrEqual(12)
       expect(m.menuInside, 'Menu button fits inside the card').toBe(true)
+
+      // back to the hero: flips back
+      await page.evaluate(() => window.scrollTo(0, 0))
+      await page.waitForTimeout(500)
+      m = await look()
+      expect(m.tone).toBe('dark')
+      expect(m.bg).toBe('rgba(0, 0, 0, 0)')
     })
 
     test('navbar: the menu opens from the middle of the page', async ({ page }) => {

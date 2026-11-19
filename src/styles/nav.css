@@ -35,10 +35,6 @@
   opacity: 1;
 }
 
-.nav[data-open='true'] .nav__bar {
-  box-shadow: none; /* no outline while it is part of the open sheet */
-}
-
 .nav__bar {
   position: relative;
   z-index: 2; /* stays above the white menu sheet so the logo and Close button remain visible */
@@ -50,12 +46,35 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  background: #fff;
   border-radius: 12px;
-  box-shadow: inset 0 0 0 1px rgba(5, 15, 58, 0.08); /* a hairline so the card still reads on white sections */
+  /* over the dark hero the bar is see-through: a white logo and a white Menu pill, no card */
+  background: transparent;
+  box-shadow: inset 0 0 0 1px transparent;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .nav .logo {
+  color: var(--text);
+  transition: color 0.2s ease;
+}
+
+/* Two looks, one flip. Nav.tsx sets data-tone="light" once the white page has reached the bar (the hero is behind
+   it again → back to "dark"). Light = the floating white card with a dark logo and a dark pill. The open menu
+   always uses the light look, because it is a white sheet. */
+.nav[data-tone='light'] .nav__bar,
+.nav[data-open='true'] .nav__bar {
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(5, 15, 58, 0.08); /* a hairline so the card still reads on white sections */
+}
+
+.nav[data-open='true'] .nav__bar {
+  box-shadow: inset 0 0 0 1px transparent; /* no outline while it is part of the open sheet */
+}
+
+.nav[data-tone='light'] .logo,
+.nav[data-open='true'] .logo {
   color: var(--ink);
 }
 
@@ -68,9 +87,18 @@
   padding: 0 14px;
   font-size: 13.5px;
   font-weight: 500;
-  /* solid dark pill on the white card, no border; it does not react to hover or press */
+  /* solid pill, no border; it does not react to hover or press: white over the hero, dark on the white card */
   border: 0;
   border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.nav[data-tone='light'] .nav__menu,
+.nav[data-open='true'] .nav__menu {
   background: var(--ink);
   color: #fff;
 }

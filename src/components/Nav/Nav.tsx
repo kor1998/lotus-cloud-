@@ -16,6 +16,7 @@ export function Nav() {
   const [open, setOpen] = useState(false)
   const [activeId, setActiveId] = useState('platforms')
   const { pathname } = useLocation()
+  const [tone, setTone] = useState<'dark' | 'light'>('dark') // dark: the hero is behind the bar · light: the white page is
   const [away, setAway] = useState(false) // the footer has come into view: it slides out of the way
   const isDesktop = useMediaQuery('(min-width: 900px)')
   const headerRef = useRef<HTMLElement>(null)
@@ -36,6 +37,14 @@ export function Nav() {
     let raf = 0
     const update = () => {
       raf = 0
+      // One flip: dark look while the dark part of the hero is behind the bar, light look as soon as the white page
+      // reaches it (and for the rest of the page). Scrolling back up to the hero flips it back.
+      const bar = headerRef.current
+      const y = (bar?.offsetHeight || 74) / 2
+      const hero = document.querySelector('.hero, .phero')
+      const r = hero?.getBoundingClientRect()
+      const next = r && y >= r.top && (y - r.top) / r.height < 0.78 ? 'dark' : 'light'
+      setTone((t) => (t === next ? t : next))
       const footer = document.querySelector('footer')
       setAway(!!footer && footer.getBoundingClientRect().top <= window.innerHeight * 0.75)
     }
@@ -84,7 +93,7 @@ export function Nav() {
   }
 
   return (
-    <header ref={headerRef} className="nav" data-open={open} data-away={away}>
+    <header ref={headerRef} className="nav" data-open={open} data-tone={tone} data-away={away}>
       <a className="skip-link" href="#main">
         Skip to main content
       </a>
